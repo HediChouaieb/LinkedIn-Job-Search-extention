@@ -1,19 +1,19 @@
-LinkedIn Job Search Quick Link — Extension Documentation
+# LinkedIn Job Search Quick Link — Extension Documentation
 
-1. Overview
+## 1. Overview
 
-LinkedIn Job Search Quick Link is a lightweight Chrome/Chromium browser extension that provides a fast way to create a LinkedIn Jobs search from two inputs:
+**LinkedIn Job Search Quick Link** is a lightweight Chrome/Chromium browser extension that provides a fast way to create a LinkedIn Jobs search from two inputs:
 
-Job title / keywords
+- **Job title / keywords**
+- **Country / location**
 
-Country / location
-
-Instead of manually opening LinkedIn Jobs and configuring the search each time, the user enters the desired role, selects a country, and clicks Search jobs.
+Instead of manually opening LinkedIn Jobs and configuring the search each time, the user enters the desired role, selects a country, and clicks **Search jobs**.
 
 The extension then builds the LinkedIn Jobs search URL and navigates the active browser tab directly to the results.
 
-Core concept
+### Core concept
 
+```text
 Job Title + Country
         |
         v
@@ -24,138 +24,97 @@ LinkedIn Jobs
         |
         v
 Jobs posted within the last hour
+```
 
-The current implementation is a search shortcut, not a job scraper, job tracker, or automatic application system.
+The current implementation is a **search shortcut**, not a job scraper, job tracker, or automatic application system.
 
-2. Main Purpose
+---
+
+# 2. Main Purpose
 
 The extension is designed to make LinkedIn job searching faster and more convenient.
 
-Without the extension
+### Without the extension
 
 The user normally needs to:
 
-Open LinkedIn.
+1. Open LinkedIn.
+2. Open the Jobs section.
+3. Enter a job title.
+4. Enter a location.
+5. Configure the search.
+6. Apply a recent-posting filter.
+7. Start the search.
 
-Open the Jobs section.
-
-Enter a job title.
-
-Enter a location.
-
-Configure the search.
-
-Apply a recent-posting filter.
-
-Start the search.
-
-With the extension
+### With the extension
 
 The workflow becomes:
 
-Open the extension.
-
-Enter a job title.
-
-Select a country.
-
-Click Search jobs.
+1. Open the extension.
+2. Enter a job title.
+3. Select a country.
+4. Click **Search jobs**.
 
 The extension generates the search URL automatically.
 
-3. Current Feature Set
+---
+
+# 3. Current Feature Set
 
 The uploaded version currently provides the following features:
 
-Feature
+| Feature | Status |
+|---|---|
+| Job title input | Implemented |
+| Country selector | Implemented |
+| Full country list | Implemented |
+| Last-used job title | Implemented |
+| Last-used country | Implemented |
+| LinkedIn Jobs URL generation | Implemented |
+| Past-hour filter | Implemented |
+| Navigate current tab | Implemented |
+| Chrome Manifest V3 | Implemented |
+| Job scraping | Not implemented |
+| Job database | Not implemented |
+| Job notifications | Not implemented |
+| Automatic applications | Not implemented |
+| AI job matching | Not implemented |
+| Background monitoring | Not implemented |
 
-Status
+---
 
-Job title input
-
-Implemented
-
-Country selector
-
-Implemented
-
-Full country list
-
-Implemented
-
-Last-used job title
-
-Implemented
-
-Last-used country
-
-Implemented
-
-LinkedIn Jobs URL generation
-
-Implemented
-
-Past-hour filter
-
-Implemented
-
-Navigate current tab
-
-Implemented
-
-Chrome Manifest V3
-
-Implemented
-
-Job scraping
-
-Not implemented
-
-Job database
-
-Not implemented
-
-Job notifications
-
-Not implemented
-
-Automatic applications
-
-Not implemented
-
-AI job matching
-
-Not implemented
-
-Background monitoring
-
-Not implemented
-
-4. User Interface
+# 4. User Interface
 
 The popup contains four main areas.
 
-Header
+## Header
 
 The extension displays a LinkedIn-style header:
 
+```text
 ┌──────────────────────────────────┐
 │  in   LinkedIn Job Search        │
 │       Find your next opportunity │
 └──────────────────────────────────┘
+```
 
 The popup uses a compact interface designed for browser-extension usage.
 
-Job Title
+---
+
+## Job Title
 
 The user enters the job title or search keywords.
 
 Example:
 
+```text
 Full Stack Developer
+```
 
 Other examples:
 
+```text
 Frontend Developer
 React Developer
 Next.js Developer
@@ -163,15 +122,19 @@ Node.js Developer
 Cybersecurity Engineer
 Penetration Tester
 Software Engineer
+```
 
-The value is sent to LinkedIn as the keywords parameter.
+The value is sent to LinkedIn as the `keywords` parameter.
 
-Location
+---
+
+## Location
 
 The user selects a country from the built-in country list.
 
 Examples:
 
+```text
 France
 Tunisia
 Germany
@@ -180,17 +143,23 @@ United Kingdom
 United States
 Italy
 Spain
+```
 
-The selected country is sent to LinkedIn as the location parameter.
+The selected country is sent to LinkedIn as the `location` parameter.
 
-Search Jobs
+---
 
-The Search jobs button generates the LinkedIn search URL and navigates the active browser tab to it.
+## Search Jobs
 
-5. How the Extension Works
+The **Search jobs** button generates the LinkedIn search URL and navigates the active browser tab to it.
+
+---
+
+# 5. How the Extension Works
 
 The current implementation follows a very simple flow.
 
+```text
 User opens extension
         |
         v
@@ -228,43 +197,59 @@ Load countries          Load saved search
                    |
                    v
           LinkedIn Jobs
+```
 
-6. Generated LinkedIn Search
+---
+
+# 6. Generated LinkedIn Search
 
 The extension constructs a URL using:
 
+```text
 https://www.linkedin.com/jobs/search/
+```
 
 with the following query parameters:
 
+```text
 keywords
 location
 f_TPR
+```
 
 For example, if the user selects:
 
+```text
 Job title:
 React Developer
 
 Country:
 France
+```
 
 the extension generates a LinkedIn Jobs search equivalent to:
 
+```text
 https://www.linkedin.com/jobs/search/?keywords=React+Developer&location=France&f_TPR=r3600
+```
 
-7. Recent Job Filter
+---
+
+# 7. Recent Job Filter
 
 The extension currently hardcodes:
 
+```text
 f_TPR = r3600
+```
 
-This tells LinkedIn to use a past-hour time filter in the generated search.
+This tells LinkedIn to use a **past-hour** time filter in the generated search.
 
 Therefore, the extension does not itself calculate when a job was posted.
 
 Instead:
 
+```text
 Extension
     |
     | Adds f_TPR=r3600
@@ -274,185 +259,220 @@ LinkedIn
     | Applies its search filter
     v
 Jobs matching the recent-posting filter
+```
 
 This distinction is important.
 
-The extension is not scraping LinkedIn to determine job timestamps.
+The extension is **not scraping LinkedIn to determine job timestamps**.
 
 It delegates the search filtering to LinkedIn.
 
-8. Remembering Previous Searches
+---
+
+# 8. Remembering Previous Searches
 
 The extension uses Chrome local storage to remember:
 
+```text
 lastJobTitle
 lastCountry
+```
 
 When the popup opens, it attempts to load these values.
 
 Example:
 
+```json
 {
   "lastJobTitle": "React Developer",
   "lastCountry": "France"
 }
+```
 
 The next time the extension is opened, the fields can automatically contain:
 
+```text
 Job title:
 React Developer
 
 Location:
 France
+```
 
 This avoids repeatedly entering the same search information.
 
-9. Country Database
+---
+
+# 9. Country Database
 
 The extension includes a local JavaScript file:
 
+```text
 countries.js
+```
 
 This file contains the country names used to populate the location dropdown.
 
-The popup dynamically creates an <option> for every country:
+The popup dynamically creates an `<option>` for every country:
 
+```javascript
 COUNTRIES.forEach((country) => {
   const opt = document.createElement("option");
   opt.value = country;
   opt.textContent = country;
   countrySelect.appendChild(opt);
 });
+```
 
 This means the country list does not require an external API.
 
-10. Default Location
+---
+
+# 10. Default Location
 
 The current implementation sets:
 
+```text
 France
+```
 
 as the initial default country.
 
 However, if a previously selected country exists in local storage, that saved value takes precedence.
 
-11. Default Job Title
+---
+
+# 11. Default Job Title
 
 The extension requires a job-title input conceptually, but the current JavaScript includes a fallback:
 
+```javascript
 jobTitle || "developer"
+```
 
 Therefore, if the input is empty, the generated LinkedIn search uses:
 
+```text
 developer
+```
 
 as the keyword.
 
-12. Browser Architecture
+---
 
-The extension uses Manifest V3.
+# 12. Browser Architecture
+
+The extension uses **Manifest V3**.
 
 The project currently contains only four files:
 
+```text
 linkedin-job-search-extension/
 │
 ├── manifest.json
 ├── popup.html
 ├── popup.js
 └── countries.js
+```
 
 There is currently no background service worker and no content script.
 
-13. File Responsibilities
+---
 
-manifest.json
+# 13. File Responsibilities
+
+## `manifest.json`
 
 Defines the browser extension metadata and permissions.
 
 Current configuration:
 
+```json
 {
   "manifest_version": 3,
   "name": "LinkedIn Job Search Quick Link",
   "version": "1.0.0"
 }
+```
 
 It also defines:
 
+```text
 popup.html
+```
 
 as the extension popup.
 
-Permissions
+### Permissions
 
 The extension requests:
 
+```text
 activeTab
 storage
+```
 
-activeTab
+### `activeTab`
 
 Used to access and update the currently active browser tab.
 
-storage
+### `storage`
 
 Used to save:
 
+```text
 lastJobTitle
 lastCountry
+```
 
-14. popup.html
+---
+
+# 14. `popup.html`
 
 This file contains the extension interface.
 
 It includes:
 
-Header
-
-Job-title input
-
-Country dropdown
-
-Search button
-
-Footer
-
-CSS styling
-
-countries.js
-
-popup.js
+- Header
+- Job-title input
+- Country dropdown
+- Search button
+- Footer
+- CSS styling
+- `countries.js`
+- `popup.js`
 
 The popup has a fixed width of approximately:
 
+```text
 320px
+```
 
 which is appropriate for a browser-extension popup.
 
-15. popup.js
+---
+
+# 15. `popup.js`
 
 This is the main application logic.
 
 Its responsibilities are:
 
-Populate the country dropdown.
+1. Populate the country dropdown.
+2. Set the default country.
+3. Read saved search values.
+4. Handle the search button.
+5. Build the LinkedIn URL.
+6. Save the latest search.
+7. Navigate the active browser tab.
 
-Set the default country.
+---
 
-Read saved search values.
-
-Handle the search button.
-
-Build the LinkedIn URL.
-
-Save the latest search.
-
-Navigate the active browser tab.
-
-16. Search Algorithm
+# 16. Search Algorithm
 
 The search operation can be represented as:
 
+```text
 INPUT:
     jobTitle
     country
@@ -478,40 +498,54 @@ PROCESS:
 
 OUTPUT:
     LinkedIn Jobs search page
+```
 
-17. Navigation Behavior
+---
+
+# 17. Navigation Behavior
 
 The extension first looks for the active tab:
 
+```javascript
 chrome.tabs.query(
   { active: true, currentWindow: true },
   ...
 )
+```
 
 If a tab is available, it updates that tab:
 
+```javascript
 chrome.tabs.update(tabs[0].id, { url });
+```
 
 If an active tab cannot be obtained, the implementation has a fallback:
 
+```javascript
 chrome.tabs.create({ url });
+```
 
 This means the intended behavior is to reuse the current tab whenever possible.
 
-18. Current Technical Boundary
+---
 
-It is important to define what this extension does and does not do.
+# 18. Current Technical Boundary
 
-It does
+It is important to define what this extension **does and does not do**.
 
+## It does
+
+```text
 Generate LinkedIn job searches
 Select a country
 Apply a recent-posting filter
 Remember the previous search
 Navigate to LinkedIn
+```
 
-It does not
+## It does not
 
+```text
 Scrape job cards
 Store individual jobs
 Track jobs over time
@@ -523,12 +557,15 @@ Read private LinkedIn information
 Use a LinkedIn API
 Use an external backend
 Use AI
+```
 
 Therefore, the correct product description for the current version is:
 
-A browser extension that quickly generates recent LinkedIn job searches based on a job title and country.
+> **A browser extension that quickly generates recent LinkedIn job searches based on a job title and country.**
 
-19. Security and Privacy Model
+---
+
+# 19. Security and Privacy Model
 
 The current implementation is intentionally small.
 
@@ -538,35 +575,37 @@ The extension only needs local browser storage for the user's last search.
 
 Stored information:
 
+```text
 lastJobTitle
 lastCountry
+```
 
 The extension does not need to store:
 
-LinkedIn passwords
+- LinkedIn passwords
+- LinkedIn session cookies
+- Private messages
+- User profiles
+- Application data
+- Browsing history
 
-LinkedIn session cookies
+---
 
-Private messages
+# 20. Why This Extension Is Useful
 
-User profiles
-
-Application data
-
-Browsing history
-
-20. Why This Extension Is Useful
-
-The main advantage is speed.
+The main advantage is **speed**.
 
 A user can create a targeted LinkedIn search in a few seconds.
 
 For example:
 
+```text
 Frontend Developer + France
+```
 
 becomes:
 
+```text
 LinkedIn Jobs
 +
 Frontend Developer
@@ -574,91 +613,119 @@ Frontend Developer
 France
 +
 Past hour
+```
 
 The user can quickly repeat this process for different roles and countries.
 
-21. Example Searches
+---
 
-Example 1
+# 21. Example Searches
 
+### Example 1
+
+```text
 Job title:
 Frontend Developer
 
 Country:
 France
+```
 
 Result:
 
+```text
 LinkedIn Jobs
 → Frontend Developer
 → France
 → Past hour
+```
 
-Example 2
+### Example 2
 
+```text
 Job title:
 Cybersecurity Engineer
 
 Country:
 Germany
+```
 
 Result:
 
+```text
 LinkedIn Jobs
 → Cybersecurity Engineer
 → Germany
 → Past hour
+```
 
-Example 3
+### Example 3
 
+```text
 Job title:
 React Developer
 
 Country:
 Tunisia
+```
 
 Result:
 
+```text
 LinkedIn Jobs
 → React Developer
 → Tunisia
 → Past hour
+```
 
-22. Possible Future Development
+---
+
+# 22. Possible Future Development
 
 The current extension is a good foundation for a more advanced job-search assistant.
 
 Possible future features include:
 
-Multiple Time Filters
+## Multiple Time Filters
 
 Instead of always using:
 
+```text
 Past hour
+```
 
 the user could choose:
 
+```text
 Past hour
 Past 24 hours
 Past week
 Past month
+```
 
-Multiple Locations
+---
+
+## Multiple Locations
 
 Allow searches across several countries:
 
+```text
 France
 Germany
 Belgium
 Netherlands
 Canada
+```
 
 The extension could generate multiple searches or provide quick-search presets.
 
-Saved Search Profiles
+---
+
+## Saved Search Profiles
 
 Example:
 
+```text
 Frontend Jobs
 
 Keywords:
@@ -670,9 +737,11 @@ Countries:
 France
 Germany
 Remote
+```
 
 Another:
 
+```text
 Cybersecurity Jobs
 
 Keywords:
@@ -684,26 +753,34 @@ Countries:
 France
 Tunisia
 Germany
+```
 
-Job Tracking
+---
+
+## Job Tracking
 
 A future version could allow users to save jobs:
 
+```text
 New
 Saved
 Applied
 Interview
 Rejected
 Offer
+```
 
 This would transform the extension from a search shortcut into a lightweight job-management tool.
 
-Job Detection
+---
+
+## Job Detection
 
 A more advanced architecture could detect job listings displayed on LinkedIn and compare them with previously seen listings.
 
 Example:
 
+```text
 Previously seen:
 1001
 1002
@@ -719,15 +796,19 @@ Current results:
 New:
 1004
 1005
+```
 
-This feature is not part of the current uploaded implementation; it would require additional content-script and storage logic.
+This feature is **not part of the current uploaded implementation**; it would require additional content-script and storage logic.
 
-Notifications
+---
+
+## Notifications
 
 Future versions could notify the user when matching jobs are detected.
 
 Example:
 
+```text
 New job found
 
 React Developer
@@ -735,13 +816,17 @@ Paris, France
 Posted recently
 
 [View job]
+```
 
 This would require background/event-handling functionality that the current version does not contain.
 
-23. Potential V2 Architecture
+---
+
+# 23. Potential V2 Architecture
 
 If the project evolves into a real job-monitoring extension, the architecture could become:
 
+```text
                     ┌─────────────────────┐
                     │ LinkedIn Jobs Page  │
                     └──────────┬──────────┘
@@ -770,15 +855,19 @@ If the project evolves into a real job-monitoring extension, the architecture co
                     │ Search profiles     │
                     │ History             │
                     └─────────────────────┘
+```
 
-The current extension does not yet implement this architecture.
+The current extension does **not** yet implement this architecture.
 
-24. Future AI Layer
+---
+
+# 24. Future AI Layer
 
 An optional future version could analyze job descriptions.
 
 For example:
 
+```text
 Job:
 Full Stack Developer
 
@@ -795,9 +884,11 @@ Required experience:
 AI summary:
 Full-stack role focused on modern JavaScript,
 React/Next.js and backend development.
+```
 
 Another possible feature is CV matching:
 
+```text
 CV ↔ Job Description
 
 Matched:
@@ -809,13 +900,17 @@ TypeScript
 Missing:
 AWS
 Kubernetes
+```
 
 AI functionality should remain optional and should not be confused with the current search functionality.
 
-25. Product Roadmap
+---
 
-Version 1.0 — Current
+# 25. Product Roadmap
 
+## Version 1.0 — Current
+
+```text
 ✓ Job title search
 ✓ Country selection
 ✓ Past-hour filter
@@ -823,43 +918,53 @@ Version 1.0 — Current
 ✓ LinkedIn URL generation
 ✓ Active-tab navigation
 ✓ Manifest V3
+```
 
-Version 2.0 — Job Discovery
+## Version 2.0 — Job Discovery
 
+```text
 □ Custom time filters
 □ Saved search profiles
 □ Job-card detection
 □ Seen-job tracking
 □ Job history
 □ Browser notifications
+```
 
-Version 3.0 — Job Management
+## Version 3.0 — Job Management
 
+```text
 □ Save jobs
 □ Application status
 □ Notes
 □ Tags
 □ Export
 □ Dashboard
+```
 
-Version 4.0 — Intelligent Assistant
+## Version 4.0 — Intelligent Assistant
 
+```text
 □ AI job summaries
 □ CV matching
 □ Skill extraction
 □ Job relevance analysis
 □ Personalized search recommendations
+```
 
-26. Project Summary
+---
 
-LinkedIn Job Search Quick Link is currently a lightweight productivity extension.
+# 26. Project Summary
+
+**LinkedIn Job Search Quick Link** is currently a lightweight productivity extension.
 
 Its purpose is straightforward:
 
-Enter a job title, select a country, and immediately open a LinkedIn Jobs search filtered to recent postings.
+> **Enter a job title, select a country, and immediately open a LinkedIn Jobs search filtered to recent postings.**
 
 The current implementation deliberately keeps the architecture simple:
 
+```text
 Popup
   ↓
 Input
@@ -871,6 +976,7 @@ Chrome storage
 Active tab
   ↓
 LinkedIn Jobs
+```
 
 It does not currently scrape, monitor, track, or automatically apply to jobs.
 
